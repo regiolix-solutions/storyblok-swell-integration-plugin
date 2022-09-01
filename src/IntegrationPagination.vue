@@ -45,7 +45,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style>
 .uk-pagination {
   padding-top: 0px;
   padding-bottom: 0px;

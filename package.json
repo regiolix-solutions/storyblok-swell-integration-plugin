@@ -16,6 +16,11 @@
       "name": "Dominik Angerer",
       "email": "da@storyblok.com",
       "url": "https://www.storyblok.com/"
+    },
+    {
+      "name": "Markus Geilehner",
+      "email": "markus@regiolix.at",
+      "url": "https://www.regiolix-solutions.at/"
     }
   ],
   "version": "2.0.0",
@@ -29,6 +34,8 @@
   "dependencies": {
     "axios": "^0.18.0",
     "debounce": "^1.2.0",
+    "sass": "^1.54.8",
+    "swell-js": "^3.17.4",
     "vue": "^2.5.2"
   },
   "devDependencies": {
@@ -38,8 +45,6 @@
     "babel-eslint": "^10.0.1",
     "eslint": "^5.8.0",
     "eslint-plugin-vue": "^5.0.0",
-    "node-sass": "^4.11.0",
-    "sass-loader": "^7.1.0",
     "vue-template-compiler": "^2.5.21"
   },
   "eslintConfig": {

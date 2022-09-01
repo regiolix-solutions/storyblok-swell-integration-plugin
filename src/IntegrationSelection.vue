@@ -14,12 +14,12 @@
       <div class="uk-position-relative uk-text-nowrap">
         <div slot="actions">
           <a class="uk-button" @click.prevent="close">
-            <i class="uk-icon-close"></i> Close Selection
+            <i class="uk-icon-close"></i>
           </a>
         </div>
       </div>
     </div>
-    <div class="spinner" v-if="loading"></div>
+    <div class="spinner" v-if="loading"/>
     <div class="uk-grid integration-results" v-if="!loading">
       <div
         class="uk-width-large-1-3 uk-width-medium-1-2 uk-margin-bottom"
@@ -27,21 +27,21 @@
         :key="result.id"
       >
         <a href="#" class="integration-result" @click.prevent="selectItem(result)">
-          <IntegrationItem :item="result" :current="current"></IntegrationItem>
+          <IntegrationItem :item="result" :current="current"/>
         </a>
       </div>
     </div>
     <IntegrationPagination
       :page="page"
       :totalPages="totalPages"
-      :loadPages="loadPages"
+      :loadPage="loadPage"
       :loading="loading"
-    ></IntegrationPagination>
+    />
   </div>
 </template>
 
 <script>
-import axios from "axios";
+import swell from "swell-js";
 import debounce from "debounce";
 import IntegrationItem from "./IntegrationItem";
 import IntegrationPagination from "./IntegrationPagination";
@@ -56,7 +56,7 @@ export default {
   data() {
     return {
       search_term: "",
-      per_page: 50,
+      per_page: 25,
       page: 1,
       response: {
         results_size: 0,
@@ -67,21 +67,16 @@ export default {
   },
   computed: {
     totalPages() {
-      return this.response.results_size != 0
-        ? Math.ceil(this.response.results_size / this.per_page)
+      return this.response.count != 0
+        ? Math.ceil(this.response.count / this.per_page)
         : 1;
     },
     requestOptions() {
-      let config = { params: { page: this.page, per_page: this.per_page } };
-      if (this.search_term.length > 0) {
-        config.params.search = this.search_term;
+      return {
+        page: this.page,
+        perPage: this.per_page,
+        searchTerm: this.search_term
       }
-      if (typeof this.options.token !== "undefined") {
-        config.auth = {
-          username: this.options.token
-        };
-      }
-      return config;
     }
   },
   created() {
@@ -97,10 +92,14 @@ export default {
     },
     load() {
       this.loading = true;
-      axios.get(this.options.endpoint, this.requestOptions).then(res => {
-        this.response = res.data;
-        this.loading = false;
-      });
+      swell.products.list({
+        search: this.requestOptions.searchTerm,
+        limit: this.requestOptions.perPage,
+        page: this.requestOptions.page
+      }).then((response) => {
+        this.response = response
+        this.loading = false
+      })
     },
     selectItem(item) {
       this.select(item);
@@ -118,7 +117,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style>
 .integration-selection {
   min-height: 700px;
 }

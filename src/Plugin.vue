@@ -1,13 +1,12 @@
 <template>
   <div class="integration">
-    
     <div v-if="!modalIsOpen">
       <IntegrationItem v-if="model.item" :item=model.item></IntegrationItem>
-      <button class="uk-button uk-width-1-1 uk-margin-small-top" @click.prevent=openSelection>Open Selection</button>
+      <button class="uk-button uk-width-1-1 uk-margin-small-top" @click.prevent=openSelection>Choose Product</button>
     </div>
 
     <div class="uk-form" v-if="modalIsOpen">
-      <IntegrationSelection :options=options :select=selectItem :current=model.item :close=closeSelection></IntegrationSelection>      
+      <IntegrationSelection :options="options" :select=selectItem :current=model.item :close=closeSelection></IntegrationSelection>
     </div>
 
   </div>
@@ -16,24 +15,26 @@
 <script>
 import IntegrationItem from './IntegrationItem'
 import IntegrationSelection from './IntegrationSelection'
+import swell from 'swell-js'
 
 export default {
   mixins: [window.Storyblok.plugin],
   data() {
     return {
-      modalIsOpen: false,
+      modalIsOpen: false
     }
   },
   methods: {
     initWith() {
       return {
         // needs to be equal to your storyblok plugin name
-        plugin: 'integration-field',
+        plugin: 'rxs-swell-integration',
         item: null
       }
     },
     pluginCreated() {
       this.checkOptions()
+      swell.init(this.options.storeId,this.options.apiKey)
     },
     openSelection() {
       this.modalIsOpen = true
@@ -47,15 +48,13 @@ export default {
       this.model.item = item
     },
     checkOptions() {
-      if (typeof this.options.endpoint === 'undefined') {
+      if (typeof this.options.storeId === 'undefined') {
         // eslint-disable-next-line
-        console.error(`Please provide the option 'endpoint' with your endpoint url as value`)
+        console.error(`Please provide the option 'storeId' with your store Id as value`)
       }
-      if (typeof this.options.token === 'undefined') {
+      if (typeof this.options.apiKey === 'undefined') {
         // eslint-disable-next-line
-        console.info(`If you need an authentication using Basic Auth add a option with the name token.`)
-        // eslint-disable-next-line
-        console.info(`Your provided token will be used as username performing a Basic Auth, the password will be left blank`)
+        console.error(`Please provide the option 'apiKey' with your public api key as value`)
       }
     }
   },
@@ -74,7 +73,7 @@ export default {
 }
 </script>
 
-<style lang="scss"> 
+<style>
 .integration-item {
   border: 1px solid #ddd;
   padding: 10px;

@@ -1,11 +1,11 @@
-# Storyblok Integration Field Starter
+# Storyblok Field Type Swell Integration
 
-> Custom integration field type plugin starter kit; Use this starter kit to make your external APIs available in Storyblok if multi-option and single-option are not enough.
+> Field Type Integration for Swell Ecommerce. This Field Type plugin makes use of Swell SDK. 
 
 ## Project setup
 
 ```
-npm install
+yarn install
 ```
 
 ### Compiles and hot-reloads for development
@@ -13,7 +13,7 @@ npm install
 Startups local development server running Vue. You will only be able to develop this custom field type by enabling the [local development option](https://www.storyblok.com/docs/Guides/Creating-a-field-type-plugin#how-to-develop-plugins-locally) with Storyblok.
 
 ```
-npm run serve
+yarn dev
 ```
 
 ### Compiles and minifies for production
@@ -21,12 +21,12 @@ npm run serve
 Exports the final plugin that can be included in Storyblok under `export.js`. Upload its content to your plugin. Make sure that your plugin name configured in `/src/Plugin.vue` is the equal to the name of your actual Storyblok plugin. Each plugin name is globally unqiue, which means that across Storyblok there will only be one plugin with that exact name for all users, even tho not all users will have access to your plugin.
 
 ```
-npm run build
+yarn build
 ```
 
 ## View: The Integration Selection Overview
 
-The overview of your results will be shown as in the screen below. It will handle pagination generation, the pagination logic needs to be in the API layer. Checkout [How to use this custom field type with your API?](#how-to-use-this-custom-field-type-with-your-api) to find out how you can use it with your API.
+The overview of your results will be shown as in the screen below. It will handle pagination generation.
 
 ![Example selection overview](https://a.storyblok.com/f/39898/3356x1750/d86bee6ad1/integration-field-selection.jpg)
 
@@ -36,59 +36,102 @@ The selected value will be shown as a box similar to the one you can see in the 
 
 ![One selected value](https://img2.storyblok.com/fit-in/1600x0/filters:fill(ffffff)/f/39898/702x324/e08b453c09/integration-field-selected.jpg)
 
-## How to use this custom field type with your API?
+## How to use this custom field type with your Swell Store?
 
-Below you can find the response object expected by this custom field type. With the Storyblok plugin options you can define the key `endpoint` with your API enpoint that should be called. The custom field type will add `per_page`, `page` and if somebody added a search term `search` as query parameter to the call so you can perform the pagination and if needed a search in your API endpoint. If you need authentication, you can configure the Storyblok custom field type option `token` which will be used as username for Basic Authentication.
-
-## Attached Query Params
-
-| Parameter | Description |
-|----|----|
-| `per_page` | How many results should be returned per page (Default: 50) |
-| `page` | Which page is requested (Default: 1) |
-| `search` | Debounced search term entered by the user; will not be attached if empty |
-
-- Example without search term: https://mydomain.example/api/integration?per_page=50&page=1
-- Example with page 2: https://mydomain.example/api/integration?per_page=50&page=2
-- Example with only 10 results per page: https://mydomain.example/api/integration?per_page=10&page=1
-- Example with search term: https://mydomain.example/api/integration?per_page=50&page=1&search=Savan
-
-## The Response Object
-
-| Property | Description |
-|----|----|
-| `results_size` | Total amount of results, used to generate pagination. |
-| `results` | Actual results. By default this starter kit uses 50 `per_page`. |
-
-```
-{
-  "results_size": 123, 
-  "results": [
-    // multiple integration objects
-  ]
-}
-```
+When adding the field type, configure your `storeId` and a public `apiKey`. Everything else is handled by the plugin like pagination, search, product listing.
 
 ## The Integration Object 
 
-| Property | Description |
-|----|----|
-| `id` | id of your result |
-| `title` | Title that should be shown to the editor during selection |
-| `image_url` | If set it will be shown next to the description to make selection for the user easier |
-| `last_update` | Timestamp of the latest update of this item |
-| `description` | A description that should be displayed below the title. Will automatically be truncated. |
-| `blob` | A JSON Object containing more information you want to have stored and available in the Storyblok API after selection |
+Refer to Swell's Product API
 
 ```
 {
-  "id": "baf0f820-0fff-456f-9256-0da23bafa481",
-  "image_url": "http://placehold.it/150x150",
-  "last_update": 1509364426938,
-  "title": "Savannah Mcfadden",
-  "description": "Eiusmod nisi ut ea et duis consectetur in occaecat non culpa. Sit nisi ut velit non id pariatur in esse enim laboris duis sit. Cillum enim elit nulla labore incididunt. Voluptate eu aute velit culpa est et aute do. Lorem id minim commodo et. Voluptate magna tempor sint cillum aute tempor proident cupidatat sint. Mollit officia non nisi id id nulla exercitation et ullamco ut laboris tempor.",
-  "blob": {
-    YOUR PROPERTIES
-  }
+  "id": "5e30cf72fc941e164ff1a6c4",
+  "attributes": {
+    "brand": {
+      "visible": true,
+      "type": "select",
+      "name": "Brand",
+      "id": "brand",
+      "filterable": true,
+      "value": "Porlex"
+    }
+  },
+  "content": {
+    "product_benefits": [
+      {
+        "icon": "uil:truck",
+        "text": "Free US shipping on all orders over $100"
+      },
+      {
+        "icon": "uil:clock-two",
+        "text": "Free returns up to 30 days"
+      },
+      {
+        "icon": "uil:award",
+        "text": "98% customer satisfaction rating"
+      }
+    ],
+    "enable_quantity": true,
+    "max_quantity": 99,
+    "up_sell_cols": 4
+  },
+  "currency": "USD",
+  "description": "<p>Take freshly ground coffee with you anywhere with The Porlex Mini Coffee Grinder. Powerful, lightweight, small, and manually powered, it&rsquo;s an excellent travel companion that doesn&rsquo;t limit you to outlets or batteries.<br><br>The grinder&rsquo;s ceramic conical burrs are designed to remain sharp for many years and cannot rust. They produce consistently uniform grounds that are suitable for french press, espresso, and everything in between. Beneath the burrs is the grind adjustment knob, offering 12+ grind settings for easy adjustments.<br><br>Take it with you across the world or down the street. Either way, it&rsquo;ll grind your coffee with ease and consistency.</p>",
+  "bundle": false,
+  "cross_sells": [
+    {
+      "id": "5e30cfacc2e7c4a1ac91a573",
+      "product_id": "5e30cdcccf1eb5144c14da50",
+      "discount_type": "fixed",
+      "discount_amount": null
+    },
+    {
+      "id": "5e30cfbbc2e7c4a1ac91a574",
+      "product_id": "5e308ef8fc9ee47b47ac0323",
+      "discount_type": "fixed",
+      "discount_amount": null
+    }
+  ],
+  "images": [
+    {
+      "id": "5e31fbdfe4e37c39bc47feeb",
+      "file": {
+        "height": 1042,
+        "md5": "291b4efb1aa395c0088adb8ac4e17938",
+        "url": "https://cdn.schema.io/test-theme/5f6fd1908256191a6a1bc25a/291b4efb1aa395c0088adb8ac4e17938",
+        "width": 1500
+      }
+    }
+  ],
+  "meta_description": "Take freshly ground coffee with you anywhere with The Porlex Mini Coffee Grinder.",
+  "meta_title": null,
+  "name": "Mini Hand Grinder",
+  "options": [],
+  "price": 48,
+  "purchase_options": {
+    "standard": {
+      "price": 48,
+      "sale": false,
+      "sale_price": null
+    }
+  },
+  "sale": false,
+  "sku": "PRLX-MIN",
+  "slug": "porlex-mini-hand-grinder",
+  "stock_purchasable": true,
+  "stock_status": null,
+  "stock_tracking": true,
+  "tags": [],
+  "up_sells": [],
+  "category_index": {
+    "sort": {
+      "5e31dbc0ae1309046a52f1a2": 0
+    },
+    "id": [
+      "5e31dbc0ae1309046a52f1a2"
+    ]
+  },
+  "cost": null
 }
 ```
