@@ -1,12 +1,12 @@
 <template>
   <div class="integration">
     <div v-if="!modalIsOpen">
-      <IntegrationItem v-if="model.item" :item=model.item></IntegrationItem>
+      <IntegrationItem v-for="item in items" :key="item.id" :item="item" @remove="selectItem(item)" removeable/>
       <button class="uk-button uk-width-1-1 uk-margin-small-top" @click.prevent=openSelection>Choose Product</button>
     </div>
 
     <div class="uk-form" v-if="modalIsOpen">
-      <IntegrationSelection :options="options" :select=selectItem :current=model.item :close=closeSelection></IntegrationSelection>
+      <IntegrationSelection :options="options" :select=selectItem :current="items" :close=closeSelection></IntegrationSelection>
     </div>
 
   </div>
@@ -21,7 +21,14 @@ export default {
   mixins: [window.Storyblok.plugin],
   data() {
     return {
-      modalIsOpen: false
+      modalIsOpen: false,
+      length: 0
+    }
+  },
+  computed:{
+    items(){
+      if(this.length === 0) return []
+      return this.model.items || []
     }
   },
   methods: {
@@ -29,7 +36,7 @@ export default {
       return {
         // needs to be equal to your storyblok plugin name
         plugin: 'rxs-swell-integration',
-        item: null
+        items: null
       }
     },
     pluginCreated() {
@@ -45,7 +52,20 @@ export default {
       this.$emit('toggle-modal', false)
     },
     selectItem(item) {
-      this.model.item = item
+      if(this.model && this.model.items){
+        const idx = this.model.items.findIndex((i) => i.id === item.id)
+        if(idx >= 0){
+          this.model.items.splice(idx,1)
+          this.length--
+        }else{
+          this.model.items.push(item)
+          this.length++
+        }
+      }else{
+        this.model.items = [item]
+        this.length++
+      }
+      return this.model.items
     },
     checkOptions() {
       if (typeof this.options.storeId === 'undefined') {

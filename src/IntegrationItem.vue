@@ -1,5 +1,5 @@
 <template>
-  <div class="integration-item" v-bind:class="{ 'integration-item--selected': selected }">
+  <div class="integration-item" v-bind:class="{ 'integration-item--selected': current }">
     <div class="integration-item__left" v-if="item.images && item.images.length">
       <img :src="item.images[0].file.url" class="integration-item__image"/>
     </div>
@@ -7,22 +7,17 @@
       <div class="uk-form-text-label">{{ item.name }}</div>
       <div class="uk-text-muted" v-html="item.description"/>
     </div>
+    <button class="uk-button" v-if="removeable" @click.prevent="$emit('remove')">X</button>
   </div>
 </template>
 
 <script>
 export default {
   props: {
-    current: Object,
-    item: Object
+    current: Boolean,
+    item: Object,
+    removeable: Boolean
   },
-  computed: {
-    selected() {
-      if (typeof this.current === "undefined" || this.current == null)
-        return false;
-      return this.current.id === this.item.id;
-    }
-  }
 };
 </script>
 

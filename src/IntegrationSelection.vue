@@ -27,7 +27,7 @@
         :key="result.id"
       >
         <a href="#" class="integration-result" @click.prevent="selectItem(result)">
-          <IntegrationItem :item="result" :current="current"/>
+          <IntegrationItem :item="result" :current="selectedItems.includes(result.id)"/>
         </a>
       </div>
     </div>
@@ -49,12 +49,13 @@ import IntegrationPagination from "./IntegrationPagination";
 export default {
   props: {
     options: Object,
-    current: Object,
+    current: Array,
     select: Function,
     close: Function
   },
   data() {
     return {
+      currentItems: this.current,
       search_term: "",
       per_page: 25,
       page: 1,
@@ -66,6 +67,9 @@ export default {
     };
   },
   computed: {
+    selectedItems(){
+      return this.currentItems.map((c) => c.id)
+    },
     totalPages() {
       return this.response.count != 0
         ? Math.ceil(this.response.count / this.per_page)
@@ -102,8 +106,8 @@ export default {
       })
     },
     selectItem(item) {
-      this.select(item);
-      this.close();
+      this.currentItems = this.select(item);
+      //this.close();
     },
     loadPage(page) {
       this.page = page;
