@@ -78,6 +78,11 @@ export default {
       }
     }
   },
+  mounted() {
+    if(this.model && this.model.items){
+      this.length = this.model.items.length
+    }
+  },
   components: {
     IntegrationItem,
     IntegrationSelection
